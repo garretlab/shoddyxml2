@@ -10,7 +10,7 @@ class rssClass: public shoddyxml {
     char **itemData;
     int itemNum;
 
-    int getArticles(const char *url, const char *targetTag, const int maxItemDataSize, const int maxItemNum);
+    int getArticles(const char *url, const char *targetTag, const int maxItemDataSize, const int maxItemNum, const char *rootCA = NULL);
     void clearItemData();
 
   private:

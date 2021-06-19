@@ -4,7 +4,7 @@
 rssClass::rssClass() {
 }
 
-int rssClass::getArticles(const char *url, const char *targetTag, const int maxItemDataSize, const int maxItemNum) {
+int rssClass::getArticles(const char *url, const char *targetTag, const int maxItemDataSize, const int maxItemNum, const char *rootCA) {
   int c;
   int port = 0;
   char protocol[8], server[32];
@@ -22,7 +22,11 @@ int rssClass::getArticles(const char *url, const char *targetTag, const int maxI
 
   if (strcmp(protocol, "https") == 0) {
     WiFiClientSecure *c = new WiFiClientSecure();
-    c->setInsecure();
+    if (rootCA) {
+      c->setCACert(rootCA);
+    } else {
+      c->setInsecure();
+    }
     client = (Client *)c;
     if (!port) {
       port = 443;
