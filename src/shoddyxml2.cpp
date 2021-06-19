@@ -8,8 +8,8 @@ shoddyxml::shoddyxml() {
   resetStatus();
 }
 
-void shoddyxml::init() {
-  this->xmlStarted = 0;
+void shoddyxml::init(int started = 0) {
+  this->xmlStarted = started;
 }
 
 void shoddyxml::resetStatus() {

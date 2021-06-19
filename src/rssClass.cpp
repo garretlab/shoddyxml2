@@ -49,7 +49,7 @@ int rssClass::getArticles(const char *url, const char *targetTag, const int maxI
     client->flush();
 
     skipHeaders();
-    init();
+    init(1);
     while ((c = getChar()) != EOF) {
       parse(c);
     }
