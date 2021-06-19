@@ -9,7 +9,7 @@ class shoddyxml {
   public:
     shoddyxml();
 
-    void init(int started);
+    void init(int started = 0);
     void parse(int c);
     void parse();
 
