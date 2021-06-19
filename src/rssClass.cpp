@@ -21,7 +21,9 @@ int rssClass::getArticles(const char *url, const char *targetTag, const int maxI
   sscanf(url, "%7[^:]://%31[^:/]:%6d/", protocol, server, &port);
 
   if (strcmp(protocol, "https") == 0) {
-    client = new WiFiClientSecure();
+    WiFiClientSecure *c = new WiFiClientSecure();
+    c->setInsecure();
+    client = (Client *)c;
     if (!port) {
       port = 443;
     }
