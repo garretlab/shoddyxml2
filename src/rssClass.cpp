@@ -48,6 +48,7 @@ int rssClass::getArticles(const char *url, const char *targetTag, const int maxI
     client->println(" HTTP/1.1");
     client->print("Host: ");
     client->println(server);
+    client->println("User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36");
     client->println("Connection: close");
     client->println();
     client->flush();
