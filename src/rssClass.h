@@ -1,7 +1,15 @@
-#include <WiFiClientSecure.h>
-#include <shoddyxml2.h>
+#ifdef ARDUINO_UNOR4_WIFI 
+#include <WiFiSSLClient.h>
+#include <WiFiS3.h>
+#endif
 
-#define CONNECTION_TIMEOUT_MILLIS 10000
+#ifdef ARDUINO_ARCH_ESP32
+#include <WiFiClientSecure.h>
+#endif
+
+#include "shoddyxml2.h"
+
+#define CONNECTION_TIMEOUT_MILLIS 100
 
 class rssClass: public shoddyxml {
   public:

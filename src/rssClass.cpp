@@ -21,18 +21,22 @@ int rssClass::getArticles(const char *url, const char *targetTag, const int maxI
   sscanf(url, "%7[^:]://%31[^:/]:%6d/", protocol, server, &port);
 
   if (strcmp(protocol, "https") == 0) {
-    WiFiClientSecure *c = new WiFiClientSecure();
+#ifdef ARDUINO_UNOR4_WIFI 
+    client = (Client *)new WiFiSSLClient();
+#endif
+#ifdef ARDUINO_ARCH_ESP32
+    client = new WiFiClientSecure();
     if (rootCA) {
-      c->setCACert(rootCA);
+      client->setCACert(rootCA);
     } else {
-      c->setInsecure();
+      client->setInsecure();
     }
-    client = (Client *)c;
+#endif
     if (!port) {
       port = 443;
     }
   } else if (strcmp(protocol, "http") == 0) {
-    client = new WiFiClient();
+    client = (Client *)new WiFiClient();
     if (!port) {
       port = 80;
     }
@@ -59,7 +63,6 @@ int rssClass::getArticles(const char *url, const char *targetTag, const int maxI
       parse(c);
     }
     client->stop();
-
   }
 
   free(this->targetTag);
