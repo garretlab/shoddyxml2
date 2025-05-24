@@ -34,6 +34,14 @@ class rssClass: public shoddyxml {
 
     Client *client;
 
+    WiFiClient wifiClient;
+
+#ifdef ARDUINO_UNOR4_WIFI 
+    WiFiSSLClient sslClient;
+#elif ARDUINO_ARCH_ESP32
+    WiFiClientSecure sslClient;
+#endif
+
     int bufPos;
     int itemDepth;
     int lastTagMatches;

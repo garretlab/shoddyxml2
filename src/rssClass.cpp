@@ -21,11 +21,8 @@ int rssClass::getArticles(const char *url, const char *targetTag, const int maxI
   sscanf(url, "%7[^:]://%31[^:/]:%6d/", protocol, server, &port);
 
   if (strcmp(protocol, "https") == 0) {
-#ifdef ARDUINO_UNOR4_WIFI 
-    client = (Client *)new WiFiSSLClient();
-#endif
+    client = &sslClient;
 #ifdef ARDUINO_ARCH_ESP32
-    client = new WiFiClientSecure();
     if (rootCA) {
       client->setCACert(rootCA);
     } else {
@@ -36,16 +33,21 @@ int rssClass::getArticles(const char *url, const char *targetTag, const int maxI
       port = 443;
     }
   } else if (strcmp(protocol, "http") == 0) {
-    client = (Client *)new WiFiClient();
+    client = &wifiClient;
     if (!port) {
       port = 80;
     }
   } else {
     return 0;
   }
-
   this->targetTag = strdup(targetTag);
 
+  client->setTimeout(30000);
+  while (client->available()) {
+    client->read();
+  }
+  client->stop();
+  
   if (client->connect(server, port) == 1) {
     client->print("GET ");
     client->print(url);
@@ -66,8 +68,6 @@ int rssClass::getArticles(const char *url, const char *targetTag, const int maxI
   }
 
   free(this->targetTag);
-  delete client;
-  client = NULL;
   return itemNum;
 }
 
@@ -157,6 +157,9 @@ void rssClass::skipHeaders() {
   while (client->connected()) {
     String line = client->readStringUntil('\n');
     if (line == "\r") {
+      break;
+    } else if (line == NULL) {
+      client->stop();
       break;
     }
   }
