@@ -9,7 +9,7 @@
 
 #include "shoddyxml2.h"
 
-#define CONNECTION_TIMEOUT_MILLIS 100
+#define CLIENT_TIMEOUT_MILLIS 30000
 
 class rssClass: public shoddyxml {
   public:
@@ -33,9 +33,7 @@ class rssClass: public shoddyxml {
     virtual void foundElement(char *s);
 
     Client *client;
-
     WiFiClient wifiClient;
-
 #ifdef ARDUINO_UNOR4_WIFI 
     WiFiSSLClient sslClient;
 #elif ARDUINO_ARCH_ESP32

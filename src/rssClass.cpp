@@ -42,10 +42,11 @@ int rssClass::getArticles(const char *url, const char *targetTag, const int maxI
   }
   this->targetTag = strdup(targetTag);
 
-  client->setTimeout(30000);
-  while (client->available()) {
-    client->read();
+  client->setTimeout(CLIENT_TIMEOUT_MILLIS);
+  while ((c = getChar()) != EOF) {
+    ;
   }
+
   client->stop();
   
   if (client->connect(server, port) == 1) {
@@ -82,21 +83,10 @@ void rssClass::clearItemData() {
 }
 
 int rssClass::getChar() {
-  static unsigned long lastRead = 0;
-  if (client->connected()) {
-    if (client->available()) {
-      lastRead = millis();
-      return client->read();
-    } else {
-      if ((millis() - lastRead) > CONNECTION_TIMEOUT_MILLIS) {
-        return EOF;
-      } else {
-        return 0;
-      }
-    }
-  } else {
-    return EOF;
+  if (client->available()) {
+    return client->read();
   }
+  return EOF;
 }
 
 void rssClass::foundXMLDecl() {
